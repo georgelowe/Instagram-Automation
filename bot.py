@@ -6,8 +6,13 @@ from selenium.webdriver.common.keys import Keys
 
 # To do:
 # [] Improve find_unfollowers() function so data is scraped if not present already for a particular user
-# [] 
-# [] 
+# [] Refactor the following / followers methods into one function
+# [] Implement method to like pictures for a particular hashtag
+# [] Implement method to comment on pictures for a particular hashtag --> list of various comments
+# [] Implement method to comment on pictures for a particular hashtag --> list of various comments
+# [] Implement method to interact with a list of rep accounts --> list of various comments
+# [] Make sure I read the rules around daily interaction limits
+# [] Need to make sure when comparing that ALL followers and followings exist else the result is not accurate
 
 # Configure the selenium web driver
 def config_driver():
@@ -37,14 +42,14 @@ def instagram_login(driver, username, password):
     driver.find_element_by_xpath("//button[contains(text(), 'Not Now')]").click()
 
 # Get users that an account is followed by and store in a text file
-def get_list_of_followers(driver, account):
+def get_list_of_followers(driver, account, count):
     target_user_link = 'https://www.instagram.com/{}/'.format(account)
     driver.get(target_user_link)
     sleep(4)
     driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a/span').click()
     sleep(3)
 
-    count = int(input("How many users do you want to scrape? ")) + 1
+    count = count + 1
 
     f = open_file(account, "followers")
 
@@ -61,14 +66,14 @@ def get_list_of_followers(driver, account):
     f.close()
 
 # Get users that an account follows and store in a text file
-def get_list_of_following(driver, account):
+def get_list_of_following(driver, account, count):
     target_user_link = 'https://www.instagram.com/{}/'.format(account)
     driver.get(target_user_link)
     sleep(4)
     driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[3]/a/span').click()
     sleep(3)
 
-    count = int(input("How many users do you want to scrape? ")) + 1
+    count = count + 1
 
     f = open_file(account, "following")
    
@@ -112,17 +117,16 @@ def open_file(account, mode):
 def close_browser(driver):
     driver.close()
 
-# # Compare the lists of followers vs following and create file of accounts to unfollow
-# def calculate_unfollowers(driver):
-
-
 if __name__ == "__main__":
-    # driver = config_driver()
-    # driver = config_driver()
-    # instagram_login(driver,username,password)
-    # account_to_scrape = input("Which account would you like to scrape? ")
-    # get_list_of_following(driver, account_to_scrape)
-    # get_list_of_followers(driver, account_to_scrape)
+
+    driver = config_driver()
+    instagram_login(driver,username,password)
+    account = input("Which account would you like to scrape? ")
+    count = int(input("How many users does " + account + " follow? "))
+    get_list_of_following(driver, account, count)
+    count = int(input("How many followers does " + account + "have? "))
+    get_list_of_followers(driver, account, count)
+
     
     
         
