@@ -1,21 +1,21 @@
 # Instagram Automation Bot 📸
 
-A Python Instagram bot that utilises selenium for repetitive or complex task automation.
+A Python Instagram bot that utilises [Selenium](https://selenium-python.readthedocs.io/) for repetitive or complex task automation.
 
 ## Key Features
 
-[x] Scrape usernames of those that follow a particular account
-[x] Scrape usernames of those that are followed by a particular account
-[x] Compare users than an account follows and is followed by to determine a list of users that don't reciprocate following
-[] Unfollow accounts that don't follow you back
-[] Like and comment on posts by a list of predetermined accounts
-[] Like and comment on posts tagged with a particular hashtag
+- [x] Scrape usernames of those that follow a particular account
+- [x] Scrape usernames of those that are followed by a particular account
+- [x] Compare users than an account follows and is followed by to determine a list of users that don't reciprocate following
+- [] Unfollow accounts that don't follow you back
+- [] Like and comment on posts by a list of predetermined accounts
+- [] Like and comment on posts tagged with a particular hashtag
 
 ## How to Get Started
 
 ## Created by:
 
-George Lowe ([Georgelowe](https://github.com/georgelowe))
+[George Lowe](https://github.com/georgelowe)
 
 Contact me here:
 
