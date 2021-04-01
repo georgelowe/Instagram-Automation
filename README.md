@@ -28,4 +28,4 @@ Contact me here:
   </a>
 </p>
 
-Disclaimer: This project is for education purposes only and its use may violate the terms of use found on Instagram. My intention with this project is to simply demonstrate time and efficiency optimisation for repeitive tasks.
+Disclaimer: This project is for educational purposes only and its use may violate the terms of use found on Instagram. My intention with this project is to simply demonstrate time and efficiency optimisation for repeitive tasks.
