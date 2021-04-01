@@ -4,6 +4,11 @@ from secrets import (username,password)
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+# To do:
+# [] Improve find_unfollowers() function so data is scraped if not present already for a particular user
+# [] 
+# [] 
+
 # Configure the selenium web driver
 def config_driver():
     driver = webdriver.Chrome()
@@ -117,10 +122,8 @@ if __name__ == "__main__":
     # instagram_login(driver,username,password)
     # account_to_scrape = input("Which account would you like to scrape? ")
     # get_list_of_following(driver, account_to_scrape)
-
     # get_list_of_followers(driver, account_to_scrape)
-    find_unfollowers("florianbrooks")
-
+    
     
         
         
