@@ -1,4 +1,4 @@
-# Instagram Automation Bot 📸
+# Instagram Automation Bot 📸 💬
 
 A Python Instagram bot that utilises [Selenium](https://selenium-python.readthedocs.io/) for repetitive or complex task automation.
 
