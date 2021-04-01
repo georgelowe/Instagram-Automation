@@ -1,8 +1,10 @@
 import os
 from time import sleep
+from random import randint
 from secrets import (username,password)
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+
 
 # To do:
 # [] Improve find_unfollowers() function so data is scraped if not present already for a particular user
