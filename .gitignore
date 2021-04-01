@@ -1,2 +1,4 @@
 secrets.py
 __pycache__/secrets.cpython-37.pyc
+
+*.txt
