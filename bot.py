@@ -78,6 +78,22 @@ def get_list_of_following(driver, account):
     
     driver.find_element_by_xpath('/html/body/div[5]/div/div/div[1]/div/div[2]/button/div').click()
     f.close()
+
+# Compare followers vs following to find accounts that don't reciprocate following
+def find_unfollowers(account):
+
+    with open(account + "-following.txt", 'r') as file1:
+        with open(account + "-followers.txt", 'r') as file2:
+            same = set(file1).difference(file2)
+
+    same.discard('\n')
+
+    f = open_file(account, "comparison")
+    with f as file_out:
+        for line in same:
+            file_out.write(line)
+
+    print("Comparison complete...")
         
 # Open a file to write to
 def open_file(account, mode):
@@ -96,13 +112,14 @@ def close_browser(driver):
 
 
 if __name__ == "__main__":
-    driver = config_driver()
-    driver = config_driver()
-    instagram_login(driver,username,password)
-    account_to_scrape = input("Which account would you like to scrape? ")
-    get_list_of_following(driver, account_to_scrape)
+    # driver = config_driver()
+    # driver = config_driver()
+    # instagram_login(driver,username,password)
+    # account_to_scrape = input("Which account would you like to scrape? ")
+    # get_list_of_following(driver, account_to_scrape)
 
-    get_list_of_followers(driver, account_to_scrape)
+    # get_list_of_followers(driver, account_to_scrape)
+    find_unfollowers("florianbrooks")
 
     
         
