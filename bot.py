@@ -46,7 +46,7 @@ def instagram_login(driver, username, password):
 # Get users that are either followed by or following a particular account
 # Mode parameter needs to be "following" or "followers"
 # Results are stored in text files, one for followers and one for following
-def get_usernames(driver, account, mode):
+def scrape_usernames(driver, account, mode):
 
     target_user_link = 'https://www.instagram.com/{}/'.format(account)
     if(driver.current_url != target_user_link):
@@ -112,7 +112,6 @@ def get_follower_count():
     count = driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a/span')
     return format_number(count.text)
 
-
 def get_following_count():
     count = driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[3]/a/span')
     return format_number(count.text)
@@ -134,6 +133,6 @@ if __name__ == "__main__":
     driver = config_driver()
     instagram_login(driver,username,password)
     account = input("Which account would you like to scrape? ")
-    get_usernames(driver, account, "following")
-    get_usernames(driver, account, "followers")
+    scrape_usernames(driver, account, "following")
+    scrape_usernames(driver, account, "followers")
         
