@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 
 # To do:
 # [] Improve find_unfollowers() function so data is scraped if not present already for a particular user
-# [] Refactor the following / followers methods into one function
+# [x] Refactor the following / followers methods into one function
 # [] Implement method to like pictures for a particular hashtag
 # [] Implement method to comment on pictures for a particular hashtag --> list of various comments
 # [] Implement method to comment on pictures for a particular hashtag --> list of various comments
@@ -43,42 +43,27 @@ def instagram_login(driver, username, password):
     sleep(1)
     driver.find_element_by_xpath("//button[contains(text(), 'Not Now')]").click()
 
-# Get users that an account is followed by and store in a text file
-def get_list_of_followers(driver, account, count):
+# Get users that are either followed by or following a particular account
+# Mode parameter needs to be "following" or "followers"
+# Results are stored in text files, one for followers and one for following
+def get_usernames(driver, account, count, mode):
+
     target_user_link = 'https://www.instagram.com/{}/'.format(account)
-    driver.get(target_user_link)
-    sleep(4)
-    driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a/span').click()
+    if(driver.current_url != target_user_link):
+        driver.get(target_user_link)
+        sleep(4)
+
+    if(mode == "followers"):
+        driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a/span').click()
+    if(mode == "following"):
+        driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[3]/a/span').click()
+    else:
+        print("Invalid mode...")
+
     sleep(3)
-
     count = count + 1
+    f = open_file(account, mode)
 
-    f = open_file(account, "followers")
-
-    for i in range(1,count):
-        user = driver.find_element_by_xpath('/html/body/div[5]/div/div/div[2]/ul/div/li[%s]' % i)
-        driver.execute_script("arguments[0].scrollIntoView();", user)
-        sleep(1)
-        text = user.text
-        list = text.encode('utf-8').split()
-        item = list[0].decode('utf-8')
-        f.write(item + "\r\n")
-
-    driver.find_element_by_xpath('/html/body/div[5]/div/div/div[1]/div/div[2]/button/div').click()
-    f.close()
-
-# Get users that an account follows and store in a text file
-def get_list_of_following(driver, account, count):
-    target_user_link = 'https://www.instagram.com/{}/'.format(account)
-    driver.get(target_user_link)
-    sleep(4)
-    driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[3]/a/span').click()
-    sleep(3)
-
-    count = count + 1
-
-    f = open_file(account, "following")
-   
     for i in range(1,count):
         user = driver.find_element_by_xpath('/html/body/div[5]/div/div/div[2]/ul/div/li[%s]' % i)
         driver.execute_script("arguments[0].scrollIntoView();", user)
@@ -91,7 +76,8 @@ def get_list_of_following(driver, account, count):
     driver.find_element_by_xpath('/html/body/div[5]/div/div/div[1]/div/div[2]/button/div').click()
     f.close()
 
-# Compare followers vs following to find accounts that don't reciprocate following
+
+# Compare text files of followers vs following to find accounts that don't reciprocate following
 def find_unfollowers(account):
 
     with open(account + "-following.txt", 'r') as file1:
@@ -125,9 +111,9 @@ if __name__ == "__main__":
     instagram_login(driver,username,password)
     account = input("Which account would you like to scrape? ")
     count = int(input("How many users does " + account + " follow? "))
-    get_list_of_following(driver, account, count)
+    get_usernames(driver, account, count, "following")
     count = int(input("How many followers does " + account + "have? "))
-    get_list_of_followers(driver, account, count)
+    get_usernames(driver, account, count, "followers")
 
     
     
