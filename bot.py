@@ -5,7 +5,6 @@ from secrets import (username,password)
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-
 # To do:
 # [x] Improve find_unfollowers() function so data is scraped if not present already for a particular user
 # [x] Refactor the following / followers methods into one function
@@ -14,7 +13,8 @@ from selenium.webdriver.common.keys import Keys
 # [] Implement method to comment on pictures for a particular hashtag --> list of various comments
 # [] Implement method to interact with a list of rep accounts --> list of various comments
 # [] Make sure I read the rules around daily interaction limits
-# [] Need to make sure when comparing that ALL followers and followings exist else the result is not accurate
+# [x] Need to make sure when comparing that ALL followers and followings exist else the result is not accurate --> we only need a full list of followers for this to work
+# [?] Handle when a count includes k e.g. 300k followers
 
 # Configure the selenium web driver
 def config_driver():
@@ -46,19 +46,23 @@ def instagram_login(driver, username, password):
 # Get users that are either followed by or following a particular account
 # Mode parameter needs to be "following" or "followers"
 # Results are stored in text files, one for followers and one for following
-def get_usernames(driver, account, count, mode):
+def get_usernames(driver, account, mode):
 
     target_user_link = 'https://www.instagram.com/{}/'.format(account)
     if(driver.current_url != target_user_link):
         driver.get(target_user_link)
         sleep(4)
 
-    if(mode == "followers"):
-        driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a/span').click()
-    if(mode == "following"):
-        driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[3]/a/span').click()
+    if(mode == "followers" or mode == "following"):
+        if(mode == "followers"):
+            count = get_follower_count()
+            driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a/span').click()
+        if(mode == "following"):
+            count = get_following_count()
+            driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[3]/a/span').click()
     else:
-        print("Invalid mode...")
+        print("Error: Mode must be followers or following")
+        return
 
     sleep(3)
     count = count + 1
@@ -75,7 +79,6 @@ def get_usernames(driver, account, count, mode):
     
     driver.find_element_by_xpath('/html/body/div[5]/div/div/div[1]/div/div[2]/button/div').click()
     f.close()
-
 
 # Compare text files of followers vs following to find accounts that don't reciprocate following
 def find_unfollowers(account):
@@ -105,6 +108,23 @@ def open_file(account, mode):
     f = open(csvfilename,'a')
     return f
 
+def get_follower_count():
+    count = driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a/span')
+    return format_number(count.text)
+
+
+def get_following_count():
+    count = driver.find_element_by_xpath('//*[@id="react-root"]/section/main/div/header/section/ul/li[3]/a/span')
+    return format_number(count.text)
+
+# Format follower/follwing data to remove number abbreviations e.g. 32k followers 
+def format_number(count):
+    if 'k' in count:
+        return int(count.replace('k', '')) * 1000
+    if 'm' in count:
+        return int(count.replace('m', '')) * 1000000
+    return int(count)
+
 # Close the browser once finished with the bot
 def close_browser(driver):
     driver.close()
@@ -114,12 +134,6 @@ if __name__ == "__main__":
     driver = config_driver()
     instagram_login(driver,username,password)
     account = input("Which account would you like to scrape? ")
-    count = int(input("How many users does " + account + " follow? "))
-    get_usernames(driver, account, count, "following")
-    count = int(input("How many followers does " + account + "have? "))
-    get_usernames(driver, account, count, "followers")
-
-    
-    
-        
+    get_usernames(driver, account, "following")
+    get_usernames(driver, account, "followers")
         
