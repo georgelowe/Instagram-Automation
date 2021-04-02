@@ -7,7 +7,7 @@ from selenium.webdriver.common.keys import Keys
 
 
 # To do:
-# [] Improve find_unfollowers() function so data is scraped if not present already for a particular user
+# [x] Improve find_unfollowers() function so data is scraped if not present already for a particular user
 # [x] Refactor the following / followers methods into one function
 # [] Implement method to like pictures for a particular hashtag
 # [] Implement method to comment on pictures for a particular hashtag --> list of various comments
@@ -79,6 +79,10 @@ def get_usernames(driver, account, count, mode):
 
 # Compare text files of followers vs following to find accounts that don't reciprocate following
 def find_unfollowers(account):
+
+    if(not os.path.isfile(account + "-following.txt") and not os.path.isfile(account + "-followers.txt")):
+        print("Error: Followers/following data does not exist for this user \n")
+        return 
 
     with open(account + "-following.txt", 'r') as file1:
         with open(account + "-followers.txt", 'r') as file2:
